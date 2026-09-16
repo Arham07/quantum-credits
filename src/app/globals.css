@@ -1,0 +1,353 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Quantum Credit design tokens — the single source of truth for every colour,
+   type size, space, radius and shadow. Components must not contain raw colour
+   values; they use the Tailwind utilities generated from these tokens.
+
+   Palette provenance:
+   - #0090F9 — the accent, sampled from the logo animation the client supplied.
+     The page takes its colour from the mark, not the other way round.
+   - The neutrals are the Strategic Plan deck's own, decoded from the PDF:
+     #202020 ink · #606060 muted · #E9EBF2 ground · #000000 · #FFFFFF.
+   The deck's #8C52FF purple is deliberately NOT used: one accent reads cleaner,
+   and a second hue fought the logo.
+   Run `npm run check:contrast` after touching any colour here.
+--------------------------------------------------------------------------- */
+@theme {
+  --color-*: initial;
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  --color-ground: #e9ebf2;
+  --color-surface: #ffffff;
+  --color-ink: #202020;
+  --color-muted: #606060;
+  --color-line: #d5d5db;
+
+  --color-night: #101010;
+  --color-night-700: #1c1c1c;
+  --color-night-500: #2a2a2a;
+  /* On --color-night: 10.1:1. The only body-text colour allowed on dark. */
+  --color-night-ink: #bdbdbd;
+
+  --color-brand-50: #eaf6ff;
+  /* Eyebrows and links on dark surfaces — 15.2:1 on --color-night. */
+  --color-brand-100: #cfe9ff;
+  /* The logo's blue, verbatim. 3.3:1 on white, so icons, rules, fills and the
+     wordmark only — never body text. */
+  --color-brand-500: #0090f9;
+  /* 5.4:1 on white, 4.6:1 on ground — use this, not brand-500, for text. */
+  --color-brand-600: #006cbb;
+  --color-brand-700: #005aa8;
+
+  --color-success-100: #d9f2e6;
+  --color-success-600: #0c7954;
+  --color-warn-500: #b07c2e;
+  --color-danger-500: #d9534f;
+  --color-danger-600: #b8403c;
+
+  /* Type scale.
+     Tuned against the two references at 375px: cantor8.io runs h1 31.5px /
+     body 13.9px, mastercard.com h1 38px / body 15px. The earlier scale was
+     h1 40.6 / body 17, which is what made the phone layout feel shouty and
+     pushed the page to twenty screens. Body bottoms out at 15px rather than
+     cantor8's 13.9 — this audience skews older and is reading about money. */
+  --text-display-xl: clamp(2rem, 1.35rem + 2.8vw, 4rem);
+  --text-display-xl--line-height: 1.05;
+  --text-display-xl--letter-spacing: -0.03em;
+  --text-display-lg: clamp(1.625rem, 1.2rem + 1.85vw, 2.875rem);
+  --text-display-lg--line-height: 1.1;
+  --text-display-lg--letter-spacing: -0.025em;
+  --text-display-md: clamp(1.1875rem, 1.05rem + 0.6vw, 1.625rem);
+  --text-display-md--line-height: 1.22;
+  --text-display-md--letter-spacing: -0.015em;
+  --text-lede: clamp(0.9375rem, 0.88rem + 0.28vw, 1.1875rem);
+  --text-lede--line-height: 1.5;
+  /* The workhorse for card and answer copy. */
+  --text-body: clamp(0.9375rem, 0.9rem + 0.2vw, 1.0625rem);
+  --text-body--line-height: 1.55;
+  /* Lists, chips, secondary lines. */
+  --text-meta: clamp(0.875rem, 0.85rem + 0.1vw, 0.9375rem);
+  --text-meta--line-height: 1.5;
+  --text-eyebrow: 0.75rem;
+  --text-eyebrow--line-height: 1.2;
+  --text-eyebrow--letter-spacing: 0.14em;
+  --text-fine: 0.78125rem;
+  --text-fine--line-height: 1.55;
+
+  --container-content: 75rem;
+  --container-prose: 42rem;
+
+  --spacing-nav: 4.5rem;
+  /* Height of the mobile Call/Text/Book bar, so nothing hides behind it. */
+  --spacing-actionbar: 4.25rem;
+  --spacing-section: clamp(4.5rem, 3rem + 5vw, 8rem);
+
+  --radius-ui: 0.875rem;
+  --radius-card: 1.75rem;
+
+  /* The reference's six-stop stack: cards float rather than pop. */
+  --shadow-card:
+    0 60px 80px rgb(15 15 15 / 0.05), 0 25px 33px rgb(15 15 15 / 0.04),
+    0 13px 18px rgb(15 15 15 / 0.03), 0 7.5px 10px rgb(15 15 15 / 0.025),
+    0 4px 5px rgb(15 15 15 / 0.02), 0 1.6px 2.2px rgb(15 15 15 / 0.015);
+  --shadow-float: 0 2px 6px rgb(11 11 15 / 0.06), 0 30px 70px -30px rgb(11 11 15 / 0.35);
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* next/font sets these on <html>; `inline` makes the utilities emit var(--font-*)
+   at the element so the fallback stack survives. */
+@theme inline {
+  --font-display: var(--font-display-face), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-body-face), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Header state, toggled by ScrollTrigger in components/layout/HeaderChrome.tsx. */
+@custom-variant scrolled (&:where(.is-scrolled, .is-scrolled *));
+
+@layer base {
+  html {
+    scroll-padding-top: calc(var(--spacing-nav) + 1rem);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-ground);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    /* Clears the fixed mobile action bar. */
+    padding-bottom: var(--spacing-actionbar);
+  }
+
+  @media (min-width: 48rem) {
+    body {
+      padding-bottom: 0;
+    }
+  }
+
+  /* Lock the page while the mobile navigation sheet is open. */
+  html:has(dialog[open]) {
+    overflow: hidden;
+  }
+
+  /* Not :where() here. Tailwind's reset sets `h1..h6 { font-weight: inherit }`
+     at specificity (0,0,1), which beats a zero-specificity :where() selector,
+     so headings would silently render at the body weight. A bare element
+     selector ties on specificity and wins by coming later in the same layer,
+     while a utility class on the element still overrides it. */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+  }
+
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 2px solid var(--color-brand-600);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Dark surfaces need the light focus ring to stay visible. */
+  :where(.on-night) :where(a, button, input, select, textarea, summary):focus-visible {
+    outline-color: var(--color-brand-100);
+  }
+
+  ::selection {
+    background-color: var(--color-brand-100);
+    color: var(--color-ink);
+  }
+}
+
+@layer components {
+  /* The wash on dark sections. Deliberately minimal: one hue, two stops, low
+     opacity — enough to keep a full-bleed black section from reading as a flat
+     slab, and not enough to notice as an effect. Four overlapping stops at 0.3
+     read as decoration; this reads as light.
+
+     Radial-gradients rather than an image: no request, no CLS, and it scales
+     to any section height. */
+  .mesh {
+    background-color: var(--color-night);
+    background-image:
+      radial-gradient(75% 85% at 12% 0%, rgb(0 144 249 / 0.13) 0%, transparent 58%),
+      radial-gradient(60% 70% at 92% 100%, rgb(0 144 249 / 0.07) 0%, transparent 60%);
+  }
+
+  /* One stop, slightly stronger, to lift the highlighted pricing tier off its
+     neighbours without turning it into a different design. */
+  .mesh-strong {
+    background-color: var(--color-night-700);
+    background-image:
+      radial-gradient(95% 100% at 18% 0%, rgb(0 144 249 / 0.2) 0%, transparent 62%);
+  }
+
+  /* Hairline that reads on both grounds. */
+  .rule-soft {
+    background-image: linear-gradient(
+      to right,
+      transparent,
+      currentColor 12%,
+      currentColor 88%,
+      transparent
+    );
+    opacity: 0.18;
+  }
+}
+
+@layer utilities {
+  /* Motion components set these before GSAP takes over, so the first paint
+     already matches frame 0 and nothing flashes in at full opacity. */
+  .will-reveal {
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .will-reveal {
+      opacity: 1;
+    }
+  }
+}
+
+/* Belt and braces: even if a GSAP tween escapes its matchMedia scope, the
+   visitor's stated preference wins. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   PillarStepper — see components/motion/PillarStepper.tsx for the scroll maths.
+--------------------------------------------------------------------------- */
+.qc-drum {
+  perspective: 340px;
+  /* Numerals rotate past the frame edge; clip them to the shape. A large
+     radius gives a true pill on the landscape phone frame and a circle on the
+     square desktop one — `50%` would turn the phone frame into an ellipse. */
+  clip-path: inset(0 round 999px);
+}
+
+.qc-drum::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+  /* The clear band is narrower than Mastercard's 27–73% because our phone pill
+     is shorter than theirs (168px vs 194px); with their band the neighbouring
+     numerals stayed legible instead of dissolving into the edge. */
+  background: linear-gradient(
+    #fff,
+    rgb(255 255 255 / 0.35) 18%,
+    rgb(255 255 255 / 0) 31%,
+    rgb(255 255 255 / 0) 69%,
+    rgb(255 255 255 / 0.35) 82%,
+    #fff
+  );
+}
+
+/* Panels stack and cross-fade wherever the stepper runs, which is now every
+   viewport. Outgoing copy leaves upward; incoming arrives from below. */
+.qc-panel {
+  opacity: 0;
+  transform: translateY(60px);
+  transition:
+    opacity 0.8s cubic-bezier(0.77, 0, 0.175, 1),
+    transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+@media (min-width: 48rem) {
+  .qc-panel {
+    transform: translateY(80px);
+  }
+
+  /* The square desktop frame is tall enough for Mastercard's own band. */
+  .qc-drum::before {
+    background: linear-gradient(
+      #fff,
+      rgb(255 255 255 / 0.2) 20%,
+      rgb(255 255 255 / 0) 27%,
+      rgb(255 255 255 / 0) 73%,
+      rgb(255 255 255 / 0.2) 78%,
+      #fff
+    );
+  }
+}
+
+.qc-panel.is-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.qc-panel.is-prev {
+  transform: translateY(-60px);
+}
+
+@media (min-width: 48rem) {
+  .qc-panel.is-prev {
+    transform: translateY(-80px);
+  }
+}
+
+/* The component drops the stacking classes under reduced motion, so this only
+   has to undo the visual state. */
+@media (prefers-reduced-motion: reduce) {
+  .qc-panel {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   CircuitLines travelling pulse — see components/motion/CircuitLines.tsx.
+   pathLength="1" on the path normalises its length, so this 4%-long dash is
+   4% of the trace whatever its real geometry, with no JS measuring involved.
+--------------------------------------------------------------------------- */
+.qc-pulse {
+  stroke-dasharray: 0.04 0.96;
+  stroke-dashoffset: 0;
+  animation: qc-pulse 3.4s linear infinite;
+}
+
+/* Slightly different periods so the four pulses never re-phase. */
+.qc-pulse:nth-of-type(2) { animation-duration: 3.55s; }
+g:nth-of-type(2) .qc-pulse { animation-duration: 3.7s; }
+g:nth-of-type(3) .qc-pulse { animation-duration: 3.85s; }
+g:nth-of-type(4) .qc-pulse { animation-duration: 4s; }
+
+@keyframes qc-pulse {
+  to {
+    stroke-dashoffset: -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qc-pulse {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* Swipe rows (the pricing tiers on phones). The scrollbar is noise on a
+   peeking-card carousel, where the partial next card is the affordance. */
+.qc-swipe {
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+.qc-swipe::-webkit-scrollbar {
+  display: none;
+}

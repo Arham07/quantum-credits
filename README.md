@@ -157,15 +157,33 @@ rather than literal `text-[17px]`-style values. Add a size to the `@theme` block
 instead of hard-coding one, or the phone layout silently stops scaling with the
 rest of the page.
 
-**Typeface.** `next/font`, self-hosted — Sora for display, Inter for body. Sora
-is a geometric grotesk with a wide, even rhythm that matches the letter-spaced
-`QUANTUM` in the logo. (The Lovable reference declares Inter and **never loads
-it**; don't copy that bug.)
+**Typeface.** One family, everywhere — **Inter**, self-hosted by `next/font` —
+matching the client's Lovable reference. Its own page declares
+`font-family: Inter, system-ui, -apple-system, sans-serif` but ships no
+`@font-face`, so it never actually loads Inter; every visitor sees their OS's
+system-ui fallback instead. We match the STYLE, not that bug: this really
+downloads and self-hosts Inter, confirmed live against the reference's own
+computed styles (`src/app/fonts.ts` has the numbers).
 
-A brief detour ran a single Figtree family everywhere, chasing
-mastercard.com/businessoutcomes's look (their own face, *Mark Offc for MC*, is
-Mastercard's proprietary cut of HVD's Mark and not ours to use). Reverted at the
-client's request, back to the Sora/Inter pairing above.
+**Boldness is capped at 600 (semibold)** for page typography. The reference
+never goes past it — its hero H2, stat numbers and card titles are all 600,
+nothing is 700. `globals.css` and every component stay at 600 or lighter,
+with exactly one exception: `components/layout/Wordmark.tsx`'s "CREDIT" is
+`font-bold`, because it is the client's actual logo replica and the supplied
+artwork is bold — it follows the logo, not the reference site.
+
+That exception is why `displayFace` still loads weight 700 in
+`src/app/fonts.ts`, even though nothing else asks for it. Dropping it would
+not make the wordmark render at 600 — with no real 700 outline self-hosted,
+the browser fakes bold by synthetically emboldening whatever weight *is*
+loaded, and that looks visibly worse than a real one. `bodyFace` has no such
+exception and stops at 600.
+
+Two earlier detours passed through here: a Sora/Inter pairing, then a single
+Figtree family chasing mastercard.com/businessoutcomes (their own face, *Mark
+Offc for MC*, is Mastercard's proprietary cut of HVD's Mark and not ours to
+use). Both were reverted at the client's request; this Inter pairing is a
+third direction, not a rollback to either.
 
 ### Motion
 

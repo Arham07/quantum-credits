@@ -23,7 +23,7 @@ export function Section({ id, tone = 'ground', className, children }: SectionPro
       id={id}
       tabIndex={-1}
       className={cx(
-        'scroll-mt-nav py-section outline-none',
+        'py-section outline-none',
         tone === 'ground' && 'bg-ground text-ink',
         tone === 'surface' && 'bg-surface text-ink',
         night && 'on-night mesh text-white',

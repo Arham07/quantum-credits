@@ -1,5 +1,5 @@
 import { CalendarIcon, MessageIcon, PhoneIcon } from '@/components/ui/Icon';
-import { ROUTES, SITE, SMS_HREF, TEL_HREF } from '@/lib/site';
+import { ROUTES, SITE, SMS_HREF, sectionHref, TEL_HREF } from '@/lib/site';
 
 /**
  * Fixed Call / Text / Book bar, phones only.
@@ -11,11 +11,16 @@ import { ROUTES, SITE, SMS_HREF, TEL_HREF } from '@/lib/site';
  *
  * `body` reserves --spacing-actionbar of padding so this never covers content.
  */
-export function MobileActionBar() {
+export function MobileActionBar({ onHome = true }: { onHome?: boolean }) {
   const items = [
     { href: TEL_HREF, label: 'Call', icon: <PhoneIcon />, sub: SITE.phone.display },
     { href: SMS_HREF, label: 'Text', icon: <MessageIcon />, sub: 'Ask anything' },
-    { href: ROUTES.contact, label: 'Book', icon: <CalendarIcon />, sub: 'Free consult' },
+    {
+      href: sectionHref(ROUTES.contact, onHome),
+      label: 'Book',
+      icon: <CalendarIcon />,
+      sub: 'Free consult',
+    },
   ];
 
   return (

@@ -10,16 +10,19 @@ import { LegalPage } from './LegalPage';
 /**
  * Page chrome for the policy documents.
  *
- * The draft banner is on until a consumer-finance attorney has signed these
- * off — flip LEGAL_IS_DRAFT in content/legalMeta.ts. Publishing unreviewed
- * policy text with no marking is how a placeholder ends up being relied on.
+ * `onHome={false}` is the point of this wrapper: it turns the header, footer
+ * and action-bar section links from `#pricing` into `/#pricing`, so they go
+ * home and land on the section instead of silently doing nothing here.
+ *
+ * The draft banner is off (LEGAL_IS_DRAFT). It stays wired so flipping that one
+ * flag brings it back if these need marking again before counsel signs off.
  */
 export function LegalShell({ doc }: { doc: LegalDoc }) {
   return (
     <>
       <SkipLink />
       {LEGAL_IS_DRAFT ? (
-        <div className="bg-warn-500/12 border-b border-warn-500/40">
+        <div className="border-b border-warn-500/40 bg-warn-500/12">
           <Container className="py-2.5">
             <p className="text-fine text-ink">
               <strong className="font-semibold">Draft for review.</strong> This document is a
@@ -29,10 +32,10 @@ export function LegalShell({ doc }: { doc: LegalDoc }) {
           </Container>
         </div>
       ) : null}
-      <SiteHeader />
+      <SiteHeader onHome={false} />
       <LegalPage doc={doc} />
-      <SiteFooter />
-      <MobileActionBar />
+      <SiteFooter onHome={false} />
+      <MobileActionBar onHome={false} />
     </>
   );
 }

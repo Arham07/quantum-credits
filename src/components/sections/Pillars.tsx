@@ -12,11 +12,7 @@ import type { NumberedItem } from '@/content/types';
  */
 export function Pillars({ items }: { items: readonly NumberedItem[] }) {
   return (
-    <section
-      id="how-it-works"
-      tabIndex={-1}
-      className="on-night scroll-mt-nav bg-night text-white outline-none"
-    >
+    <section id="how-it-works" tabIndex={-1} className="on-night bg-night text-white outline-none">
       <PillarStepper
         eyebrow="How we get it done"
         title="Four moves, run in order, every round."

@@ -63,6 +63,23 @@ export interface NavLink {
   href: string;
 }
 
+/**
+ * Resolve a section anchor for the page it is rendered on.
+ *
+ * Section links are stored bare (`#pricing`) because on the homepage that is
+ * what SmoothScroll's bridge intercepts, giving Lenis scrolling and correct
+ * focus movement. On any other route a bare `#pricing` looks for an element
+ * that is not there and does nothing, so it has to become `/#pricing` and go
+ * home first.
+ *
+ * Storing `/#pricing` everywhere instead would be simpler and wrong: the
+ * bridge only matches `a[href^="#"]`, so the homepage would lose smooth
+ * scrolling and the focus handoff on every nav click.
+ */
+export function sectionHref(href: string, onHome: boolean): string {
+  return onHome || !href.startsWith('#') ? href : `/${href}`;
+}
+
 export const PRIMARY_NAV: readonly NavLink[] = [
   { label: 'How it works', href: ROUTES.process },
   { label: 'Pricing', href: ROUTES.pricing },

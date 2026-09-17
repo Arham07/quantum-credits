@@ -6,7 +6,7 @@ import {
   NO_LEGAL_ADVICE,
   NOT_AFFILIATED,
 } from '@/content/legal';
-import { FOOTER_NAV, SITE } from '@/lib/site';
+import { FOOTER_NAV, SITE, sectionHref } from '@/lib/site';
 import { Wordmark } from './Wordmark';
 
 /**
@@ -14,7 +14,7 @@ import { Wordmark } from './Wordmark';
  * set at the same size as the rest of the fine print rather than shrunk — "clear
  * and conspicuous" is a legal standard, and 9px grey does not meet it.
  */
-export function SiteFooter() {
+export function SiteFooter({ onHome = true }: { onHome?: boolean }) {
   const year = new Date().getFullYear();
 
   return (
@@ -56,7 +56,10 @@ export function SiteFooter() {
                 <ul className="mt-3 flex flex-col gap-2">
                   {column.links.map((link) => (
                     <li key={link.label}>
-                      <a href={link.href} className="text-meta transition-colors hover:text-white">
+                      <a
+                        href={sectionHref(link.href, onHome)}
+                        className="text-meta transition-colors hover:text-white"
+                      >
                         {link.label}
                       </a>
                     </li>

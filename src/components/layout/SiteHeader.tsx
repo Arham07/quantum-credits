@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { PhoneIcon } from '@/components/ui/Icon';
 import { ScrollTrigger, useGSAP } from '@/lib/gsap';
-import { PRIMARY_NAV, ROUTES, SITE, TEL_HREF } from '@/lib/site';
+import { PRIMARY_NAV, ROUTES, SITE, sectionHref, TEL_HREF } from '@/lib/site';
 import { Wordmark } from './Wordmark';
 
 /**
@@ -15,7 +15,7 @@ import { Wordmark } from './Wordmark';
  * React state update, so scrolling never re-renders the tree. `@custom-variant
  * scrolled` in globals.css is what makes `scrolled:` utilities resolve.
  */
-export function SiteHeader() {
+export function SiteHeader({ onHome = true }: { onHome?: boolean }) {
   const root = useRef<HTMLElement>(null);
 
   useGSAP(
@@ -53,7 +53,7 @@ export function SiteHeader() {
           {PRIMARY_NAV.map((link) => (
             <a
               key={link.href}
-              href={link.href}
+              href={sectionHref(link.href, onHome)}
               className="text-meta text-muted transition-colors hover:text-ink"
             >
               {link.label}
@@ -71,7 +71,7 @@ export function SiteHeader() {
             </span>
             {SITE.phone.display}
           </a>
-          <Button href={ROUTES.contact} size="md" className="max-md:hidden">
+          <Button href={sectionHref(ROUTES.contact, onHome)} size="md" className="max-md:hidden">
             Book a free consultation
           </Button>
         </div>

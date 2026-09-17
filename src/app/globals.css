@@ -111,6 +111,11 @@
 
 @layer base {
   html {
+    /* `scroll-padding-top` on the scroll container is the ONLY place the sticky
+       header is compensated for. Do not also put `scroll-margin-top` on the
+       targets: the two stack, which landed cross-page hash links 160px low while
+       same-page clicks — routed through Lenis at NAV_OFFSET — landed at 88px.
+       Keep this in step with NAV_OFFSET in lib/motion.ts. */
     scroll-padding-top: calc(var(--spacing-nav) + 1rem);
     -webkit-text-size-adjust: 100%;
   }

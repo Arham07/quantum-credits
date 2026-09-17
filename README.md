@@ -157,16 +157,15 @@ rather than literal `text-[17px]`-style values. Add a size to the `@theme` block
 instead of hard-coding one, or the phone layout silently stops scaling with the
 rest of the page.
 
-**Typeface.** One family across headings and body — **Figtree**, self-hosted by
-`next/font`. mastercard.com/businessoutcomes runs a single face the same way;
-theirs is *Mark Offc for MC*, Mastercard's proprietary cut of HVD's Mark and
-licensed to them alone, so we can neither use it nor serve their `.ttf` files.
-Figtree is the closest open-licensed match: same geometric skeleton, similarly
-tall x-height, single-storey `g`, flat-sided round letterforms, with the slight
-humanist warmth Mark has over a pure geometric. If the client ever licenses Mark
-itself, swap `src/app/fonts.ts` for a `localFont()` call — nothing else in the
-app names a family. (The Lovable reference declares Inter and **never loads
+**Typeface.** `next/font`, self-hosted — Sora for display, Inter for body. Sora
+is a geometric grotesk with a wide, even rhythm that matches the letter-spaced
+`QUANTUM` in the logo. (The Lovable reference declares Inter and **never loads
 it**; don't copy that bug.)
+
+A brief detour ran a single Figtree family everywhere, chasing
+mastercard.com/businessoutcomes's look (their own face, *Mark Offc for MC*, is
+Mastercard's proprietary cut of HVD's Mark and not ours to use). Reverted at the
+client's request, back to the Sora/Inter pairing above.
 
 ### Motion
 

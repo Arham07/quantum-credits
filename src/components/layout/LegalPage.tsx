@@ -90,6 +90,13 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
                 <li key={section.id}>
                   <a
                     href={`#${section.id}`}
+                    // Opt out of SmoothScroll's Lenis bridge. These pages carry
+                    // no motion, and routing the jump list through Lenis made it
+                    // race with ScrollTrigger's refreshes — the scroll would
+                    // silently not happen on a fresh load. A native jump uses
+                    // the same `scroll-padding-top` offset (88px) as every other
+                    // link on the site, and it is deterministic.
+                    data-native-anchor
                     className="text-meta text-muted transition-colors hover:text-brand-600"
                   >
                     <span className="tabular-nums">{String(i + 1).padStart(2, '0')}.</span>{' '}
@@ -101,7 +108,7 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
           </nav>
 
           {doc.sections.map((section, i) => (
-            <section key={section.id} id={section.id} className="mt-12 scroll-mt-nav">
+            <section key={section.id} id={section.id} tabIndex={-1} className="mt-12 outline-none">
               <h2 className="text-display-md">
                 <span className="mr-2 tabular-nums text-brand-600">
                   {String(i + 1).padStart(2, '0')}

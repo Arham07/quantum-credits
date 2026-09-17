@@ -16,29 +16,6 @@ function ScrollBridge() {
   useEffect(() => {
     if (!lenis) return;
 
-    const handleClick = (event: MouseEvent) => {
-      if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.button !== 0) return;
-
-      const target = event.target;
-      if (!(target instanceof Element)) return;
-
-      const anchor = target.closest<HTMLAnchorElement>('a[href^="#"]:not([data-native-anchor])');
-      if (!anchor) return;
-
-      const destination = document.querySelector<HTMLElement>(anchor.hash);
-      if (!destination) return;
-
-      event.preventDefault();
-      window.history.pushState(null, '', anchor.hash);
-      lenis.scrollTo(destination, {
-        offset: -NAV_OFFSET,
-        // Lenis moves the page; focus has to follow for keyboard users.
-        onComplete: () => destination.focus({ preventScroll: true }),
-      });
-    };
-
-    document.addEventListener('click', handleClick);
-
     // lenis.css sets `html.lenis { height: auto }`, so measurements change.
     const resync = () => {
       lenis.resize();
@@ -57,7 +34,6 @@ function ScrollBridge() {
 
     return () => {
       cancelled = true;
-      document.removeEventListener('click', handleClick);
       window.removeEventListener('load', resync);
     };
   }, [lenis]);
@@ -94,8 +70,21 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
   }, [reduced]);
 
   const options = reduced
-    ? { autoRaf: false, smoothWheel: false, syncTouch: false }
-    : { autoRaf: false, smoothWheel: true, syncTouch: false, lerp: 0.1 };
+    ? { autoRaf: false, smoothWheel: false, syncTouch: false, anchors: false }
+    : {
+        autoRaf: false,
+        smoothWheel: true,
+        syncTouch: false,
+        lerp: 0.1,
+        // Lenis handles in-page anchor clicks itself. We used to intercept them
+        // by hand and call lenis.scrollTo() after a history.pushState() — but
+        // Next's App Router patches pushState, and calling it immediately before
+        // scrollTo kills the scroll outright: the router's scroll handling pins
+        // the page at 0. The symptom was a nav link that silently did nothing,
+        // intermittently, depending on what else was refreshing ScrollTrigger.
+        // `anchors` is the library's own path and does not touch history.
+        anchors: { offset: -NAV_OFFSET },
+      };
 
   return (
     <ReactLenis root options={options} ref={lenisRef}>

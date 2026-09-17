@@ -4,6 +4,7 @@ import { useActionState, useId, useReducer, useRef } from 'react';
 import { useFormStatus } from 'react-dom';
 import { submitLead } from '@/app/actions';
 import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
 import { ArrowIcon, CheckIcon } from '@/components/ui/Icon';
 import { TCPA_CONSENT } from '@/content/legal';
 import { cx } from '@/lib/cx';
@@ -61,7 +62,7 @@ export function LeadQuiz() {
 
   if (result?.ok) {
     return (
-      <div className="rounded-card border border-line bg-surface p-6 sm:p-8 lg:p-10">
+      <Card tone="surface">
         <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-success-100 text-success-600">
           <CheckIcon />
         </span>
@@ -76,7 +77,7 @@ export function LeadQuiz() {
           </a>{' '}
           and we’ll pick it up now.
         </p>
-      </div>
+      </Card>
     );
   }
 
@@ -88,10 +89,7 @@ export function LeadQuiz() {
   };
 
   return (
-    <form
-      action={formAction}
-      className="rounded-card border border-line bg-surface p-5 sm:p-7 lg:p-6 sm:p-8 lg:p-10"
-    >
+    <Card as="form" tone="surface" action={formAction}>
       <div className="flex items-center justify-between gap-4">
         <p
           ref={headingRef}
@@ -296,7 +294,7 @@ export function LeadQuiz() {
           </div>
         </fieldset>
       </div>
-    </form>
+    </Card>
   );
 }
 

@@ -28,7 +28,10 @@ export function Proof() {
         {PROOF.stats.length > 0 ? (
           <Reveal stagger className="mt-9 grid gap-4 sm:mt-12 sm:grid-cols-3">
             {PROOF.stats.map((stat) => (
-              <article key={stat.id} className="rounded-card bg-night p-9 text-white shadow-card">
+              <article
+                key={stat.id}
+                className="rounded-card bg-card-night p-6 text-white shadow-card sm:p-[30px] xl:p-[35px]"
+              >
                 <p className="font-display text-[3.25rem] font-semibold leading-none tabular-nums">
                   {stat.value}
                 </p>
@@ -44,7 +47,10 @@ export function Proof() {
         {PROOF.testimonials.length > 0 ? (
           <Reveal stagger className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {PROOF.testimonials.map((item) => (
-              <figure key={item.id} className="rounded-card border border-line bg-surface p-8">
+              <figure
+                key={item.id}
+                className="rounded-card bg-surface p-6 shadow-card sm:p-[30px] xl:p-[35px]"
+              >
                 <blockquote className="text-body">“{item.quote}”</blockquote>
                 <figcaption className="mt-5 text-meta font-medium text-muted">
                   {item.attribution}

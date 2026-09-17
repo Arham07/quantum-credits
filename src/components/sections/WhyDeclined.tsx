@@ -1,4 +1,5 @@
 import { Reveal } from '@/components/motion/Reveal';
+import { Card, mutedTextClass } from '@/components/ui/Card';
 import { Container } from '@/components/ui/Container';
 import { Section } from '@/components/ui/Section';
 import { SectionHeading } from '@/components/ui/SectionHeading';
@@ -16,19 +17,27 @@ export function WhyDeclined({ items: WHY_DECLINED }: { items: readonly NumberedI
           />
         </Reveal>
 
+        {/* The reference alternates card fills rather than repeating one — it is
+            what stops a four-up grid reading as a table. Card 2 takes the
+            near-black, so the rhythm reads on mobile (where they stack) as well
+            as on the 2x2. */}
         <Reveal stagger className="mt-9 grid gap-3 sm:mt-12 sm:gap-5 sm:grid-cols-2">
-          {WHY_DECLINED.map((item) => (
-            <article
-              key={item.id}
-              className="rounded-card border border-line bg-ground p-5 sm:p-7 lg:p-8"
-            >
-              <p className="font-display text-lg font-semibold tabular-nums text-brand-600 sm:text-2xl">
-                {item.index}
-              </p>
-              <h3 className="mt-2 text-display-md sm:mt-3">{item.title}</h3>
-              <p className="mt-3 text-body text-muted">{item.body}</p>
-            </article>
-          ))}
+          {WHY_DECLINED.map((item, i) => {
+            const tone = i === 1 ? 'night' : 'surface';
+            return (
+              <Card as="article" key={item.id} tone={tone}>
+                <p
+                  className={`font-display text-lg font-semibold tabular-nums sm:text-2xl ${
+                    tone === 'night' ? 'text-brand-100' : 'text-brand-600'
+                  }`}
+                >
+                  {item.index}
+                </p>
+                <h3 className="mt-2 text-display-md sm:mt-3">{item.title}</h3>
+                <p className={`mt-3 text-body ${mutedTextClass(tone)}`}>{item.body}</p>
+              </Card>
+            );
+          })}
         </Reveal>
       </Container>
     </Section>

@@ -29,8 +29,12 @@
 
   --color-night: #101010;
   --color-night-700: #1c1c1c;
-  --color-night-500: #2a2a2a;
-  /* On --color-night: 10.1:1. The only body-text colour allowed on dark. */
+  /* The near-black CARD fill — the reference uses #1a1a1a for the same job.
+     Distinct from --color-night so a card and a full-bleed surface can drift
+     apart without one silently restyling the other. */
+  --color-card-night: #1c1c1c;
+  /* On --color-night and --color-card-night alike: 10.1:1 / 9.1:1. The only
+     body-text colour allowed on either. */
   --color-night-ink: #bdbdbd;
 
   --color-brand-50: #eaf6ff;
@@ -87,14 +91,16 @@
   --spacing-section: clamp(4.5rem, 3rem + 5vw, 8rem);
 
   --radius-ui: 0.875rem;
-  --radius-card: 1.75rem;
+  /* 36px, the reference's radius on every single card. */
+  --radius-card: 2.25rem;
 
-  /* The reference's six-stop stack: cards float rather than pop. */
+  /* The reference's six-stop stack, copied at its real opacities. Ours used to
+     run ~40% fainter (top stop 0.05 against their 0.08), which is a large part
+     of why our cards read as flat outlines instead of floating. */
   --shadow-card:
-    0 60px 80px rgb(15 15 15 / 0.05), 0 25px 33px rgb(15 15 15 / 0.04),
-    0 13px 18px rgb(15 15 15 / 0.03), 0 7.5px 10px rgb(15 15 15 / 0.025),
-    0 4px 5px rgb(15 15 15 / 0.02), 0 1.6px 2.2px rgb(15 15 15 / 0.015);
-  --shadow-float: 0 2px 6px rgb(11 11 15 / 0.06), 0 30px 70px -30px rgb(11 11 15 / 0.35);
+    0 60px 80px rgb(15 15 15 / 0.08), 0 25.07px 33.42px rgb(15 15 15 / 0.06),
+    0 13.4px 17.87px rgb(15 15 15 / 0.047), 0 7.51px 10.02px rgb(15 15 15 / 0.04),
+    0 3.99px 5.32px rgb(15 15 15 / 0.03), 0 1.66px 2.21px rgb(15 15 15 / 0.024);
 
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -157,7 +163,8 @@
     border-radius: 4px;
   }
 
-  /* Dark surfaces need the light focus ring to stay visible. */
+  /* Dark CARD fills need the light focus ring to stay visible; ui/Card.tsx
+     puts `on-night` on the night and accent tones. */
   :where(.on-night) :where(a, button, input, select, textarea, summary):focus-visible {
     outline-color: var(--color-brand-100);
   }
@@ -176,32 +183,7 @@
 
      Radial-gradients rather than an image: no request, no CLS, and it scales
      to any section height. */
-  .mesh {
-    background-color: var(--color-night);
-    background-image:
-      radial-gradient(75% 85% at 12% 0%, rgb(0 144 249 / 0.13) 0%, transparent 58%),
-      radial-gradient(60% 70% at 92% 100%, rgb(0 144 249 / 0.07) 0%, transparent 60%);
-  }
 
-  /* One stop, slightly stronger, to lift the highlighted pricing tier off its
-     neighbours without turning it into a different design. */
-  .mesh-strong {
-    background-color: var(--color-night-700);
-    background-image:
-      radial-gradient(95% 100% at 18% 0%, rgb(0 144 249 / 0.2) 0%, transparent 62%);
-  }
-
-  /* Hairline that reads on both grounds. */
-  .rule-soft {
-    background-image: linear-gradient(
-      to right,
-      transparent,
-      currentColor 12%,
-      currentColor 88%,
-      transparent
-    );
-    opacity: 0.18;
-  }
 }
 
 @layer utilities {
@@ -355,4 +337,50 @@ g:nth-of-type(4) .qc-pulse { animation-duration: 4s; }
 
 .qc-swipe::-webkit-scrollbar {
   display: none;
+}
+
+
+/* ---------------------------------------------------------------------------
+   CardMarquee — see components/motion/CardMarquee.tsx for why this is a CSS
+   transform loop and not the reference's setInterval + scrollTo.
+   The track is rendered twice and shifts by exactly one copy's width (-50% of
+   the pair), so the reset lands on an identical frame and the loop is seamless.
+--------------------------------------------------------------------------- */
+.qc-marquee-track {
+  animation: qc-marquee 42s linear infinite;
+}
+
+/* Pausing on hover lets someone actually read a card that caught their eye —
+   the reference offers no way to stop it at all. Also pause when a card inside
+   has keyboard focus, or tabbing through would chase the focus ring. */
+.qc-marquee:hover .qc-marquee-track,
+.qc-marquee:focus-within .qc-marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes qc-marquee {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Stop dead and hand the row back to the reader: no animation, but still
+     swipeable so every card stays reachable. */
+  .qc-marquee {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
+  }
+
+  .qc-marquee::-webkit-scrollbar {
+    display: none;
+  }
+
+  .qc-marquee-track {
+    animation: none;
+  }
 }

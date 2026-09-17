@@ -1,5 +1,13 @@
 import { ROUTES, SITE, SMS_HREF } from '@/lib/site';
-import type { ChartRow, FaqItem, Hero, NumberedItem, ProcessFact, ValueLine } from './types';
+import type {
+  ChallengedItem,
+  ChartRow,
+  FaqItem,
+  Hero,
+  NumberedItem,
+  ProcessFact,
+  ValueLine,
+} from './types';
 
 /**
  * Homepage copy.
@@ -27,6 +35,28 @@ export const HERO: Hero = {
     caption: 'Where your file sits today is a starting point, not a verdict.',
   },
 };
+
+/**
+ * The marquee strip under the hero.
+ *
+ * Voice rule applies here as much as anywhere: these are things we CHALLENGE,
+ * never things we promise to remove. Each note says what the item is, not what
+ * will happen to it.
+ *
+ * Deliberately a separate list rather than reusing QUIZ_STEPS.issues: that one
+ * includes "I'm not sure", which is a valid thing for a visitor to say about
+ * their own file and a nonsense thing to put on a card.
+ */
+export const CHALLENGED_ITEMS: readonly ChallengedItem[] = [
+  { id: 'collections', title: 'Collections', note: 'Accounts sold on to a third party' },
+  { id: 'charge-offs', title: 'Charge-offs', note: 'Written off, still sitting on your file' },
+  { id: 'late-payments', title: 'Late payments', note: '30, 60, 90 days and beyond' },
+  { id: 'inquiries', title: 'Hard inquiries', note: 'Pulls you never authorised' },
+  { id: 'repossessions', title: 'Repossessions', note: 'Voluntary and involuntary' },
+  { id: 'bankruptcies', title: 'Bankruptcies', note: 'Including discharged filings' },
+  { id: 'student-loans', title: 'Student loans', note: 'Defaults and misreported balances' },
+  { id: 'foreclosures', title: 'Foreclosures', note: 'And the deficiency balances after' },
+];
 
 /**
  * The deck's "Top Reasons for Bank Decline". Kept close to the client's own

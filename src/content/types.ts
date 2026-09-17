@@ -81,3 +81,10 @@ export interface QuizStep {
 export interface Placeholder {
   placeholder?: true;
 }
+
+/** One card in the "what we challenge" marquee. */
+export interface ChallengedItem {
+  id: string;
+  title: string;
+  note: string;
+}

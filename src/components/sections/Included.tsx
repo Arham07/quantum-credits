@@ -1,5 +1,6 @@
 import { CircuitLines } from '@/components/motion/CircuitLines';
 import { Reveal } from '@/components/motion/Reveal';
+import { Card } from '@/components/ui/Card';
 import { Container } from '@/components/ui/Container';
 import { CheckIcon, CrossIcon } from '@/components/ui/Icon';
 import { Section } from '@/components/ui/Section';
@@ -37,7 +38,7 @@ export function Included({
         </Reveal>
 
         <div className="mt-9 grid gap-4 sm:mt-12 lg:grid-cols-2">
-          <Reveal className="rounded-card border border-line bg-ground/80 p-6 backdrop-blur-sm sm:p-8 lg:p-10">
+          <Card as={Reveal} tone="surface">
             <h3 className="text-display-md">What’s included</h3>
             <ul className="mt-4 flex flex-col gap-3">
               {PRICING_INCLUDES.map((line) => (
@@ -49,24 +50,23 @@ export function Included({
                 </li>
               ))}
             </ul>
-          </Reveal>
+          </Card>
 
-          <Reveal
-            delay={0.15}
-            className="rounded-card border border-line bg-ground/80 p-6 backdrop-blur-sm sm:p-8 lg:p-10"
-          >
+          {/* The honest column takes the near-black fill — it is the one the
+              client should actually read, and the contrast earns the look. */}
+          <Card as="div" tone="night">
             <h3 className="text-display-md">What we can’t do</h3>
             <ul className="mt-4 flex flex-col gap-3">
               {SCOPE_LIMITS.map((line) => (
-                <li key={line} className="flex gap-3 text-body text-muted">
-                  <span className="mt-0.5 shrink-0 text-danger-600">
+                <li key={line} className="flex gap-3 text-body text-night-ink">
+                  <span className="mt-0.5 shrink-0 text-danger-500">
                     <CrossIcon />
                   </span>
                   {line}
                 </li>
               ))}
             </ul>
-          </Reveal>
+          </Card>
         </div>
 
         <Reveal as="p" className="mt-8 max-w-prose text-fine text-muted">

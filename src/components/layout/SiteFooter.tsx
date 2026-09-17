@@ -18,7 +18,7 @@ export function SiteFooter({ onHome = true }: { onHome?: boolean }) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-night text-night-ink">
+    <footer className="bg-ground text-muted">
       <Container className="py-11 sm:py-14 lg:py-20">
         <div className="grid gap-9 sm:gap-12 lg:grid-cols-[1.25fr_2fr] lg:gap-16">
           <div>
@@ -30,15 +30,12 @@ export function SiteFooter({ onHome = true }: { onHome?: boolean }) {
             <p className="mt-4 text-meta">
               <a
                 href={`tel:${SITE.phone.e164}`}
-                className="text-white transition-colors hover:text-brand-100"
+                className="text-ink transition-colors hover:text-brand-600"
               >
                 {SITE.phone.display}
               </a>
               <br />
-              <a
-                href={`mailto:${SITE.email.display}`}
-                className="transition-colors hover:text-white"
-              >
+              <a href={`mailto:${SITE.email.display}`} className="transition-colors hover:text-ink">
                 {SITE.email.display}
               </a>
               <PlaceholderTag show={SITE.email.placeholder} />
@@ -52,13 +49,13 @@ export function SiteFooter({ onHome = true }: { onHome?: boolean }) {
           <div className="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 sm:gap-10">
             {FOOTER_NAV.map((column) => (
               <nav key={column.title} aria-label={column.title}>
-                <h2 className="text-eyebrow font-medium uppercase text-white">{column.title}</h2>
+                <h2 className="text-eyebrow font-medium uppercase text-ink">{column.title}</h2>
                 <ul className="mt-3 flex flex-col gap-2">
                   {column.links.map((link) => (
                     <li key={link.label}>
                       <a
                         href={sectionHref(link.href, onHome)}
-                        className="text-meta transition-colors hover:text-white"
+                        className="text-meta transition-colors hover:text-ink"
                       >
                         {link.label}
                       </a>
@@ -70,7 +67,7 @@ export function SiteFooter({ onHome = true }: { onHome?: boolean }) {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col gap-3 border-t border-white/10 pt-7 text-fine sm:mt-14 sm:gap-4 sm:pt-8">
+        <div className="mt-10 flex flex-col gap-3 border-t border-line pt-7 text-fine sm:mt-14 sm:gap-4 sm:pt-8">
           <p>
             {SITE.legalName}
             <PlaceholderTag />, a credit repair organization registered in {SITE.registration.state}
@@ -82,7 +79,7 @@ export function SiteFooter({ onHome = true }: { onHome?: boolean }) {
           <p>{CANCELLATION_RIGHTS}</p>
           <p>{NOT_AFFILIATED}</p>
           <p>{MASTER_DISCLAIMER}</p>
-          <p className="pt-2 text-white/50">
+          <p className="pt-2 text-muted/70">
             © {year} {SITE.legalName}. All rights reserved.
           </p>
         </div>

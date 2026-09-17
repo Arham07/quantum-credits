@@ -22,16 +22,13 @@ import { isMotionAllowed, MOTION_OK, useReducedMotion } from '@/lib/motion';
  * attached to the wheel; the copy is DISCRETE and tweened in CSS over 0.8s, so
  * each sentence feels committed. Making both scroll-linked reads as mush.
  *
- * The mesh lives on the sticky child, not on the section: the section is 400vh,
- * and a background sized to it would stretch the radial stops over four screens
- * so the middle two read as flat black. On the sticky child the gradient is
- * always exactly one viewport tall.
+ * The section heading is rendered HERE rather than as a separate block above:
+ * outside the sticky, it was followed by half a viewport of dead space before
+ * the first pillar reached the pinned area. One surface, one composition.
  *
- * That is also why the section heading is rendered HERE rather than as a
- * separate block above. A heading outside the sticky sat on flat `night` while
- * the stepper sat on the mesh, which drew a hard colour seam across the section,
- * and it was followed by half a viewport of dead space before the first pillar
- * reached the pinned area. One surface, one composition, neither problem.
+ * The drum was a white pill on a dark mesh. The page is light throughout now,
+ * so it is a floating `shadow-card` pill on the ground instead — same mechanic,
+ * the reference's card language in place of a gradient.
  *
  * It runs on phones too, as Mastercard's does: at 375px their section is still
  * 400vh with the same sticky drum, just scaled down (numeral 128px, and the
@@ -127,7 +124,6 @@ export function PillarStepper({
     >
       <div
         className={cx(
-          'mesh',
           // `min-h-screen`, not `h-screen`, and no `overflow-hidden`: on a
           // short viewport a fixed height would silently clip the pillar copy,
           // and text you cannot read is a worse failure than a panel that grows.
@@ -140,7 +136,7 @@ export function PillarStepper({
           <div className="flex flex-col gap-10 md:gap-12">
             <header className="flex flex-col gap-4">
               <div className="flex items-baseline justify-between gap-6">
-                <p className="text-eyebrow font-medium uppercase text-brand-100">{eyebrow}</p>
+                <p className="text-eyebrow font-medium uppercase text-brand-600">{eyebrow}</p>
                 {/* The counter snaps at the midpoint between steps, with no
                     transition — it is a readout, not pagination chrome.
                     Hidden wherever the stepper is not driving it: with all four
@@ -149,7 +145,7 @@ export function PillarStepper({
                 <p
                   data-step-counter
                   className={cx(
-                    'shrink-0 font-display text-xl font-medium tabular-nums text-white md:text-[1.625rem]',
+                    'shrink-0 font-display text-xl font-medium tabular-nums md:text-[1.625rem]',
                     reduced && 'hidden',
                   )}
                 >
@@ -157,7 +153,7 @@ export function PillarStepper({
                 </p>
               </div>
               <h2 className="max-w-[18ch] text-display-lg">{title}</h2>
-              <p className="max-w-prose text-lede text-night-ink">{lede}</p>
+              <p className="max-w-prose text-lede text-muted">{lede}</p>
             </header>
 
             <div className="grid gap-10 md:grid-cols-12 md:items-center md:gap-8">
@@ -166,12 +162,12 @@ export function PillarStepper({
                   cylinder rather than a flat squash; the fog gradient makes
                   numerals emerge from and dissolve into the frame's edges. */}
               <div className={cx('md:col-span-4', reduced && 'hidden')}>
-                <div className="qc-drum relative mx-auto h-[10.5rem] w-full rounded-full bg-white sm:h-[12rem] md:aspect-square md:h-auto md:max-w-[13rem]">
+                <div className="qc-drum relative mx-auto h-[10.5rem] w-full rounded-full bg-surface shadow-card sm:h-[12rem] md:aspect-square md:h-auto md:max-w-[13rem]">
                   {items.map((item, i) => (
                     <div
                       key={item.id}
                       data-step-numeral
-                      className="absolute inset-0 flex items-center justify-center font-display text-[6.5rem] font-semibold leading-none tracking-tighter tabular-nums text-night sm:text-[7rem] md:text-[6rem]"
+                      className="absolute inset-0 flex items-center justify-center font-display text-[6.5rem] font-semibold leading-none tracking-tighter tabular-nums text-ink sm:text-[7rem] md:text-[6rem]"
                       style={{ transformStyle: 'preserve-3d', opacity: i === 0 ? 1 : 0 }}
                     >
                       {item.index}
@@ -201,14 +197,12 @@ export function PillarStepper({
                     {/* The drum already shows the index while the stepper is
                         running; this numeral is only for the flat list. */}
                     {reduced ? (
-                      <p className="font-display text-3xl font-semibold tabular-nums text-white/30">
+                      <p className="font-display text-3xl font-semibold tabular-nums text-ink/30">
                         {item.index}
                       </p>
                     ) : null}
-                    <h3 className={cx('text-display-md text-white', reduced && 'mt-2')}>
-                      {item.title}
-                    </h3>
-                    <p className="mt-4 max-w-prose text-lede text-night-ink">{item.body}</p>
+                    <h3 className={cx('text-display-md', reduced && 'mt-2')}>{item.title}</h3>
+                    <p className="mt-4 max-w-prose text-lede text-muted">{item.body}</p>
                   </article>
                 ))}
               </div>

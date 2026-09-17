@@ -1,5 +1,6 @@
 import { Reveal } from '@/components/motion/Reveal';
 import { Button } from '@/components/ui/Button';
+import { Card, mutedTextClass } from '@/components/ui/Card';
 import { Container } from '@/components/ui/Container';
 import { CheckIcon } from '@/components/ui/Icon';
 import { Section } from '@/components/ui/Section';
@@ -34,14 +35,13 @@ export function Pricing({
 }) {
   const valueTotal = VALUE_STACK.reduce((sum, line) => sum + line.value, 0);
   return (
-    <Section id="pricing" tone="night">
+    <Section id="pricing" tone="ground">
       <Container>
         <Reveal>
           <SectionHeading
             eyebrow="Pricing"
             title="Priced on what’s actually in your file."
             lede="We pull all three reports, count what is there, and you land in one of five bands. No quote before the count — that would just be a guess with a number on it."
-            tone="night"
             align="center"
             className="mx-auto items-center text-center"
           />
@@ -55,34 +55,47 @@ export function Pricing({
           stagger
           className="qc-swipe -mx-5 mt-7 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-1 pt-3 sm:mx-0 sm:mt-12 sm:grid sm:snap-none sm:grid-cols-2 sm:gap-4 sm:overflow-visible sm:px-0 sm:pt-0 lg:mt-14 lg:grid-cols-3 xl:grid-cols-5"
         >
-          {TIERS.map((tier) => (
-            <article
-              key={tier.id}
-              className={
-                tier.featured
-                  ? 'mesh-strong relative flex w-[78%] shrink-0 snap-start flex-col rounded-card border border-brand-500/50 p-6 sm:w-auto sm:p-7'
-                  : 'relative flex w-[78%] shrink-0 snap-start flex-col rounded-card border border-white/12 bg-white/5 p-6 sm:w-auto sm:p-7'
-              }
-            >
-              {tier.featured ? (
-                <p className="absolute -top-3 left-7 rounded-full bg-brand-600 px-3 py-1 text-[0.6875rem] font-semibold uppercase tracking-wide text-white">
-                  Most common
-                </p>
-              ) : null}
+          {TIERS.map((tier) => {
+            const tone = tier.featured ? 'accent' : 'surface';
+            return (
+              <Card
+                as="article"
+                key={tier.id}
+                tone={tone}
+                className="flex w-[78%] shrink-0 snap-start flex-col p-6 sm:w-auto sm:p-7"
+              >
+                {tier.featured ? (
+                  // On the accent fill the ribbon has to invert — a brand-600
+                  // pill on a brand-600 card would be invisible.
+                  <p className="absolute -top-3 left-7 rounded-full bg-ink px-3 py-1 text-[0.6875rem] font-semibold uppercase tracking-wide text-white">
+                    Most common
+                  </p>
+                ) : null}
 
-              <p className="text-eyebrow font-medium uppercase text-brand-100">{tier.name}</p>
-              <p className="mt-3 font-display text-[2.25rem] font-semibold leading-none tabular-nums text-white sm:mt-4 sm:text-[2.5rem]">
-                {usd(tier.price)}
-              </p>
-              <p className="mt-4 text-meta font-medium text-white">{tier.items} negative items</p>
-              <p className="mt-2 text-meta text-night-ink">{tier.blurb}</p>
-            </article>
-          ))}
+                <p
+                  className={`text-eyebrow font-medium uppercase ${
+                    tier.featured ? 'text-white/90' : 'text-brand-600'
+                  }`}
+                >
+                  {tier.name}
+                </p>
+                <p className="mt-3 font-display text-[2.25rem] font-semibold leading-none tabular-nums sm:mt-4 sm:text-[2.5rem]">
+                  {usd(tier.price)}
+                </p>
+                <p className="mt-4 text-meta font-medium">{tier.items} negative items</p>
+                <p className={`mt-2 text-meta ${mutedTextClass(tone)}`}>{tier.blurb}</p>
+              </Card>
+            );
+          })}
         </Reveal>
 
-        <Reveal className="mt-8 grid gap-7 rounded-card border border-white/12 bg-white/5 p-6 sm:p-8 lg:mt-10 lg:grid-cols-[1fr_auto] lg:items-center lg:gap-14 lg:p-10">
+        <Card
+          as={Reveal}
+          tone="night"
+          className="mt-8 grid gap-7 lg:mt-10 lg:grid-cols-[1fr_auto] lg:items-center lg:gap-14"
+        >
           <div>
-            <p className="font-display text-xl font-semibold text-white sm:text-2xl">
+            <p className="font-display text-xl font-semibold sm:text-2xl">
               Then {usd(MONTHLY_FEE)} per month, per round
             </p>
             <p className="mt-2 text-meta text-night-ink">
@@ -108,33 +121,31 @@ export function Pricing({
               Free, and we count them with you.
             </p>
           </div>
-        </Reveal>
+        </Card>
 
         {/* The deck's value stack, used as the anchor. */}
-        <Reveal className="mt-4 rounded-card border border-white/12 p-6 sm:mt-6 sm:p-6 sm:p-8 lg:p-10">
-          <h3 className="text-display-md text-white">What’s in the programme</h3>
+        <Card as={Reveal} tone="surface" className="mt-4 sm:mt-6">
+          <h3 className="text-display-md">What’s in the programme</h3>
           <dl className="mt-5 grid gap-x-10 gap-y-2.5 sm:grid-cols-2">
             {VALUE_STACK.map((line) => (
               <div
                 key={line.id}
-                className="flex items-baseline justify-between gap-4 border-b border-white/10 pb-3"
+                className="flex items-baseline justify-between gap-4 border-b border-line pb-3"
               >
-                <dt className="text-meta text-night-ink">{line.label}</dt>
-                <dd className="font-display font-semibold tabular-nums text-white">
-                  {usd(line.value)}
-                </dd>
+                <dt className="text-meta text-muted">{line.label}</dt>
+                <dd className="font-display font-semibold tabular-nums">{usd(line.value)}</dd>
               </div>
             ))}
             <div className="flex items-baseline justify-between gap-4 pt-1 sm:col-span-2">
-              <dt className="font-display text-lg font-semibold text-white">Total value</dt>
-              <dd className="font-display text-lg font-semibold tabular-nums text-brand-500">
+              <dt className="font-display text-lg font-semibold">Total value</dt>
+              <dd className="font-display text-lg font-semibold tabular-nums text-brand-600">
                 {usd(valueTotal)}
               </dd>
             </div>
           </dl>
-        </Reveal>
+        </Card>
 
-        <Reveal as="p" className="mt-8 max-w-prose text-fine text-night-ink">
+        <Reveal as="p" className="mt-8 max-w-prose text-fine text-muted">
           {NO_ADVANCE_PAYMENT}
         </Reveal>
       </Container>

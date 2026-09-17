@@ -24,6 +24,12 @@ const T = {
   line: '#D5D5DB',
   night: '#101010',
   'night-700': '#1C1C1C',
+  'card-night': '#1C1C1C',
+  // White at 90% over brand-600 — the floor for secondary text on an accent
+  // card. Composited here rather than trusted, because opacity over a
+  // saturated fill is exactly where this silently drops below AA.
+  'white-90-on-accent': '#E6F0F8',
+  'white-70-on-cardnight': '#BBBBBB',
   'night-ink': '#BDBDBD',
   'brand-50': '#EAF6FF',
   'brand-100': '#CFE9FF',
@@ -80,6 +86,21 @@ const PAIRS = [
   ['brand-100', 'night-700', 'eyebrows on the featured tier', 4.5],
   ['warn-500', 'surface', 'placeholder tag border (non-text)', 3],
   ['line', 'surface', 'card borders (non-text)', 1.2],
+
+  // --- Card surfaces. Every card on the page is one of these three tones. ---
+  ['ink', 'surface', 'white card: heading and body', 4.5],
+  ['muted', 'surface', 'white card: secondary copy', 4.5],
+  ['brand-600', 'surface', 'white card: eyebrow and link', 4.5],
+  ['white', 'card-night', 'near-black card: heading', 4.5],
+  ['night-ink', 'card-night', 'near-black card: body copy', 4.5],
+  ['white-70-on-cardnight', 'card-night', 'near-black card: eyebrow at 70% opacity', 4.5],
+  ['brand-100', 'card-night', 'near-black card: accent eyebrow', 4.5],
+  // The accent card is the one genuinely new surface, and the one that fails
+  // if built naively: white on the raw logo blue (#0090F9) is 3.3:1. It uses
+  // brand-600 instead, and its secondary text stops at 90% white — 85% is
+  // already 4.38 and fails.
+  ['white', 'brand-600', 'accent card: heading', 4.5],
+  ['white-90-on-accent', 'brand-600', 'accent card: secondary copy at 90% opacity', 4.5],
 ];
 
 let fails = 0;

@@ -2,6 +2,7 @@ import { MobileActionBar } from '@/components/layout/MobileActionBar';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { SkipLink } from '@/components/layout/SkipLink';
+import { ChallengeStrip } from '@/components/sections/ChallengeStrip';
 import { Contact } from '@/components/sections/Contact';
 import { Faq } from '@/components/sections/Faq';
 import { Hero } from '@/components/sections/Hero';
@@ -12,6 +13,7 @@ import { Process } from '@/components/sections/Process';
 import { Proof } from '@/components/sections/Proof';
 import { WhyDeclined } from '@/components/sections/WhyDeclined';
 import {
+  CHALLENGED_ITEMS,
   CHART_AXIS_MAX,
   CHART_ROWS,
   FAQS,
@@ -40,6 +42,7 @@ export default function Home() {
       <SiteHeader />
       <main id="main" tabIndex={-1} className="outline-none">
         {/* 1 */ <Hero content={HERO} />}
+        {/*   */ <ChallengeStrip items={CHALLENGED_ITEMS} />}
         {/* 2 */ <WhyDeclined items={WHY_DECLINED} />}
         {/* 3 */ <Pillars items={PILLARS} />}
         {/* 4 */ <Process facts={PROCESS_FACTS} chartRows={CHART_ROWS} chartMax={CHART_AXIS_MAX} />}

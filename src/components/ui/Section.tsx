@@ -3,8 +3,11 @@ import { cx } from '@/lib/cx';
 
 interface SectionProps {
   id: string;
-  /** `night` flips the section onto the dark mesh and switches text colours. */
-  tone?: 'ground' | 'surface' | 'night';
+  /**
+   * Sections are light throughout, alternating ground/surface so neighbours
+   * differ. Dark is a CARD tone now, not a section tone — see ui/Card.tsx.
+   */
+  tone?: 'ground' | 'surface';
   className?: string;
   children: ReactNode;
 }
@@ -17,16 +20,13 @@ interface SectionProps {
  * focuses the destination once Lenis finishes moving.
  */
 export function Section({ id, tone = 'ground', className, children }: SectionProps) {
-  const night = tone === 'night';
   return (
     <section
       id={id}
       tabIndex={-1}
       className={cx(
         'py-section outline-none',
-        tone === 'ground' && 'bg-ground text-ink',
-        tone === 'surface' && 'bg-surface text-ink',
-        night && 'on-night mesh text-white',
+        tone === 'ground' ? 'bg-ground text-ink' : 'bg-surface text-ink',
         className,
       )}
     >
